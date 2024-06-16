@@ -22,10 +22,14 @@
 
 ## snippets
 ```python
-
 document.create_document_from(html_node_list)
-document.create_template(html_node_list)
-document.querySelector("div")
+```
 
+```python
+document.create_template(html_node_list)
+```
+
+```python
+document.querySelector("div")
 
 ```
