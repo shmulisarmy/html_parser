@@ -1,0 +1,7 @@
+find all good canedets from beginning
+find all good canedets from end
+
+
+find matches where being_len + ending_len < total and begin_index < ending_index
+go inward reqrsivly making sure that the middle nodes are indeed in between beging and end while <= to the total_length
+from all the possibilities sort from least to most nodes to make_full_text
