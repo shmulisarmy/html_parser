@@ -38,8 +38,6 @@ document: DomTree = DomTree.create_document_from(html)
 
 
 
-
-
 from domTree import text_tree
 
 
