@@ -21,7 +21,7 @@
 
 
 ## snippets
-```python3
+```python
 
 document.create_document_from(html_node_list)
 document.create_template(html_node_list)
