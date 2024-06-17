@@ -196,7 +196,8 @@ class DomTree:
             index+=1
     
     def get_closest_sharing_parrent(self, other) -> 'DomTree':
-        best_pair: ['DomTree']|None = None
+
+        best_pair: list['DomTree']|None = None
         closest_dom_distance = float('inf')
         for index, parrent in self.recursive_parrents():
             for other_index, other_parrent in other.recursive_parrents():
