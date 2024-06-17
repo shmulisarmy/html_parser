@@ -42,6 +42,15 @@ document: DomTree = DomTree.create_document_from(html)
 
 print(document)
 
+
+first_div = document.querySelector("div")
+second_div = document.querySelectorAll("div")[-1]
+
+
+
+
+print(first_div.get_closest_sharing_parrent(second_div))
+
 # from domTree import text_tree
 
 
