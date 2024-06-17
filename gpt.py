@@ -24,7 +24,6 @@ class HTML:
                 tag_content = string[1:-1]
                 tag_match = re.match(r"(\w+)(.*)", tag_content)
                 _content = tag_match.group(1)
-                print(f"{tag_match.group(2) = }")
                 attributes = cls.parse_attributes(tag_match.group(2))
         else:
             Type = "text"

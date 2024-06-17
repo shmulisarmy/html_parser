@@ -25,7 +25,7 @@ class HTML:
                     inside_arrows.clear()
 
         return html_tag_list
-    
+
     # @classmethod
     # def str_type(cls, string):
     #     """_class='navbar'"""

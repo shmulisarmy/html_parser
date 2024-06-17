@@ -32,7 +32,7 @@ class DomTree:
             
 
     @classmethod
-    def create_document_from(cls, html_node_list):
+    def create_document_from(cls, html_node_list: list['DomTree']):
         begin = 0
         end = len(html_node_list)-1
 
@@ -44,10 +44,11 @@ class DomTree:
             Type, content = HTML.str_type(html_node)
             if Type == "tag":
                 previus_element = at
-                at = DomTree(content, previus_element)
+                find_tag_name_pattern = re.compile("\w+")
+                tag_name: str = find_tag_name_pattern.match(content).group(0)
+                at = DomTree(tag_name, previus_element)
                 previus_element.childrenNodes.append(at)
                 pattern = re.match(r"(\w+)(.*)", content).group(0)
-                print(f"{pattern = }")
                 at.atributes = HTML.parse_attributes(pattern)
             elif Type == "endTag":
                 at = at.parentNode
@@ -184,6 +185,31 @@ class DomTree:
                     resulting_node_combos.extend([current_text + inner_combo + current_reverse for inner_combo in middle_results])
 
         return resulting_node_combos
+    
+    def recursive_parrents(self):
+        """works like an enumerater"""
+        node = self
+        index = 0
+        while node.parentNode:
+            node = node.parentNode
+            yield (index, node)
+            index+=1
+    
+    def get_closest_sharing_parrent(self, other) -> 'DomTree':
+        best_pair: ['DomTree']|None = None
+        closest_dom_distance = float('inf')
+        for index, parrent in self.recursive_parrents():
+            for other_index, other_parrent in other.recursive_parrents():
+                if parrent == other_parrent:
+                    current_dom_distance = index+other_index
+                    if current_dom_distance < closest_dom_distance:
+                        best_pair = [parrent, other_parrent]
+                        closest_dom_distance = current_dom_distance
+
+        return best_pair
+                    
+
+
             
         
 
