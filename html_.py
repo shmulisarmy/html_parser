@@ -65,7 +65,7 @@ class HTML:
     
     @classmethod
     def parse_attributes(cls, attribute_string):
-        attributes = defaultdict(None)
+        attributes = {}
         # Regex to find attributes in the form key="value"
         attr_re = re.compile(r"(\w+)='([^']*)'")
         for match in attr_re.findall(attribute_string):

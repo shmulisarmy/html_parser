@@ -1,5 +1,5 @@
 from html_ import HTML
-from collections import defaultdict
+# from collections import defaultdict
 from custom_packages.searchTree import SearchTree
 import re
 
@@ -16,9 +16,10 @@ class DomTree:
         self.childrenNodes = []
         self.parentNode = parentNode
         self.textContent = textContent
-        self.atributes = defaultdict(None)
+        self.atributes = {}
         self.atributes['class'] = None
         self.atributes['id'] = None
+        self.classList = []
 
     def traverse(self, level=0):
         result = []
@@ -211,17 +212,17 @@ class DomTree:
     def get_closest_sharing_parrent(self, other) -> 'DomTree':
         """brute force: n(n) complexity"""
 
-        best_pair: list['DomTree']|None = None
+        closest_parrent: list['DomTree']|None = None
         closest_dom_distance = float('inf')
         for index, parrent in self.recursive_parrents():
             for other_index, other_parrent in other.recursive_parrents():
                 if parrent == other_parrent:
                     current_dom_distance = index+other_index
                     if current_dom_distance < closest_dom_distance:
-                        best_pair = [parrent, other_parrent]
+                        closest_parrent = parrent
                         closest_dom_distance = current_dom_distance
 
-        return best_pair
+        return closest_parrent
     
     def search_for_element(self, tag_name=None, class_name=None, id=None, atributes = {}) -> 'DomTree':
         print(f"{atributes = }")
@@ -263,8 +264,20 @@ class DomTree:
             results.extend(node.search_for_element(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes))
 
         return results
+    
+    def best_common_selector(self, other: 'DomTree') -> str:
+        atributes = list(filter(lambda item: item[0] in other.atributes and item[1] == other.atributes[item[0]], self.atributes.items()))
+        classList = list(filter(lambda class_name: class_name in other.classList, self.classList))
+        if self.tagname == other.tagname:
+            tag_name = self.tagname
+        else:
+            tag_name = None
 
-                                
+
+        closest_sharing_parrent: 'DomTree' = self.get_closest_sharing_parrent(other)
+        query = closest_sharing_parrent.create_query() + f".search_for_elements({tag_name}, {classList}, None, {atributes})"
+
+        return query   
 
                 
 

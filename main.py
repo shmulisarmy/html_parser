@@ -8,7 +8,7 @@ html_string = (
     "        <div>\n"
     "            hello\n"
     "        </div>\n"
-    "        <div>\n"
+    "        <div class='fuck'>\n"
     "            hello you\n"
     "        </div>\n"
     "    </nav>\n"
@@ -43,10 +43,10 @@ print(document.atributes)
 
 
 nav = document.search_for_element(tag_name='nav', class_name='fuck', id='fire')
-div = document.search_for_element(tag_name='div')
+div = document.search_for_element(tag_name='div', class_name='fuck')
 
 
-cp = nav.get_closest_sharing_parrent(div)
+cp = nav.best_common_selector(div)
 
 print(cp)
 
