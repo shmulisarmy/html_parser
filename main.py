@@ -3,8 +3,8 @@ from domTree import DomTree
 
 
 html_string = (
-    "<body>\n"
-    "    <nav>\n"
+    "<body class='fuck'>\n"
+    "    <nav class='fuck' id='fire'>\n"
     "        <div>\n"
     "            hello\n"
     "        </div>\n"
@@ -38,18 +38,17 @@ print(html)
 
 document: DomTree = DomTree.create_document_from(html)
 
-
-
-print(document)
-
-
-first_div = document.querySelector("div")
-second_div = document.querySelectorAll("div")[-1]
+print(document.atributes)
 
 
 
+nav = document.search_for_element(tag_name='nav', class_name='fuck', id='fire')
+div = document.search_for_element(tag_name='div')
 
-print(first_div.get_closest_sharing_parrent(second_div))
+
+cp = nav.get_closest_sharing_parrent(div)
+
+print(cp)
 
 # from domTree import text_tree
 

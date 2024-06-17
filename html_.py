@@ -1,10 +1,7 @@
 import re
-
+from collections import defaultdict
 
 class HTML:
-    def __init__(self, arguments):
-        pass
-
     @classmethod
     def get_html_tag_list(cls, html_string):
         html_tag_list = []
@@ -68,7 +65,7 @@ class HTML:
     
     @classmethod
     def parse_attributes(cls, attribute_string):
-        attributes = {}
+        attributes = defaultdict(None)
         # Regex to find attributes in the form key="value"
         attr_re = re.compile(r"(\w+)='([^']*)'")
         for match in attr_re.findall(attribute_string):

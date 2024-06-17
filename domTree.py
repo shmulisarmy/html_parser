@@ -1,9 +1,10 @@
 from html_ import HTML
+from collections import defaultdict
 from custom_packages.searchTree import SearchTree
 import re
 
 
-
+INDENT = "  "
 text_tree = SearchTree()
 text_reverse_tree = SearchTree()
 
@@ -15,7 +16,9 @@ class DomTree:
         self.childrenNodes = []
         self.parentNode = parentNode
         self.textContent = textContent
-        self.atributes = {}
+        self.atributes = defaultdict(None)
+        self.atributes['class'] = None
+        self.atributes['id'] = None
 
     def traverse(self, level=0):
         result = []
@@ -57,7 +60,7 @@ class DomTree:
                 text_tree.insertWithValue(content, at)
                 text_reverse_tree.insertWithValue(content[::-1], at)
 
-                
+
 
 
             begin += 1
@@ -81,8 +84,8 @@ class DomTree:
                 previus_element = at
                 at = DomTree(content, previus_element)
                 previus_element.childrenNodes.append(at)
-                print(f"    const {content} = document.createElement('{content}')")
-                print(f"    {previus_element.tagname}.appendChild({content})")
+                print(f"{INDENT}const {content} = document.createElement('{content}')")
+                print(f"{INDENT}{previus_element.tagname}.appendChild({content})")
             elif Type == "endTag":
                 at = at.parentNode
 
@@ -186,7 +189,17 @@ class DomTree:
 
         return resulting_node_combos
     
-    def recursive_parrents(self):
+    def recursive_parrents(self) -> list[tuple]:
+        results = []
+        node = self
+        index = 0
+        while node.parentNode:
+            node = node.parentNode
+            results.append((index, node))
+            index+=1
+        return results
+
+    def recursive_parrents_iterator(self):
         """works like an enumerater"""
         node = self
         index = 0
@@ -196,6 +209,7 @@ class DomTree:
             index+=1
     
     def get_closest_sharing_parrent(self, other) -> 'DomTree':
+        """brute force: n(n) complexity"""
 
         best_pair: list['DomTree']|None = None
         closest_dom_distance = float('inf')
@@ -208,11 +222,49 @@ class DomTree:
                         closest_dom_distance = current_dom_distance
 
         return best_pair
-                    
-
-
-            
+    
+    def search_for_element(self, tag_name=None, class_name=None, id=None, atributes = {}) -> 'DomTree':
+        print(f"{atributes = }")
+        for node in self.childrenNodes:
+            node: DomTree
+            if node.tagname != tag_name:
+                continue
+            print(f"{node.atributes = }")
+            if node.atributes.get('class') != class_name:
+                continue
+            if node.atributes.get('id') != id:
+                continue
+            if any(node.atributes.get(atr) != atributes[atr] for atr in atributes):
+                continue
+            return node
         
+        for node in self.childrenNodes:
+            node: DomTree
+            result_in_child = node.search_for_element(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes)
+            if result_in_child:
+                return result_in_child
+            
+    def search_for_elements(self, tag_name=None, class_name=None, id=None, **atributes) -> list['DomTree']:
+        results = []
+        for node in self.childrenNodes:
+            node: DomTree
+            if node.tagname != tag_name:
+                continue
+            if node.atributes.get('class') != class_name:
+                continue
+            if node.atributes.get('id') != id:
+                continue
+            if any(node.atributes.get(atr) != atributes[atr] for atr in atributes):
+                continue
+            results.append(node)
+        
+        for node in self.childrenNodes:
+            node: DomTree
+            results.extend(node.search_for_element(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes))
+
+        return results
+
+                                
 
                 
 
@@ -228,5 +280,3 @@ def char_match_amount(a: str, b: str) -> int|bool:
         else:
             return char_match_amount
     return True
-
-        
