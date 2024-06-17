@@ -12,7 +12,7 @@ html_string = (
     "            hello you\n"
     "        </div>\n"
     "    </nav>\n"
-       "    <nav>\n"
+       "    <nav class='side' id='figma'>\n"
             "fuck"
     "        <div>\n"
     "            hello\n"
@@ -34,16 +34,20 @@ html_string = (
 
 html = HTML.get_html_tag_list(html_string)
 
+print(html)
+
 document: DomTree = DomTree.create_document_from(html)
 
 
 
-from domTree import text_tree
+print(document)
+
+# from domTree import text_tree
 
 
-text_tree.debug()
+# text_tree.debug()
 
 
-print()
-print(f"{[[node.textContent for node in combo] for combo in DomTree.find_by_text('hellohelloyouyou')] = }")
+# print()
+# print(f"{[[node.textContent for node in combo] for combo in DomTree.find_by_text('hellohelloyouyou')] = }")
 

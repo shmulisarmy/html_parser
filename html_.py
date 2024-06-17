@@ -1,3 +1,6 @@
+import re
+
+
 class HTML:
     def __init__(self, arguments):
         pass
@@ -5,19 +8,21 @@ class HTML:
     @classmethod
     def get_html_tag_list(cls, html_string):
         html_tag_list = []
-        current = []
+        inside_arrows = []
         for index, char in enumerate(html_string):
-            if char == " " or char == "\n":
+            if  char == "\n":
+                continue
+            if not inside_arrows and char == " ":
                 continue
             if char == "<":
-                if current:
-                    html_tag_list.append(''.join(current))
-                    current.clear()
-            current.append(char)
+                if inside_arrows:
+                    html_tag_list.append(''.join(inside_arrows))
+                    inside_arrows.clear()
+            inside_arrows.append(char)
             if char == ">":
-                if current:
-                    html_tag_list.append(''.join(current))
-                    current.clear()
+                if inside_arrows:
+                    html_tag_list.append(''.join(inside_arrows))
+                    inside_arrows.clear()
 
         return html_tag_list
     
@@ -60,5 +65,18 @@ class HTML:
             _content = string
         
         return (Type, _content)
+    
+    @classmethod
+    def parse_attributes(cls, attribute_string):
+        attributes = {}
+        # Regex to find attributes in the form key="value"
+        attr_re = re.compile(r"(\w+)='([^']*)'")
+        for match in attr_re.findall(attribute_string):
+            attributes[match[0]] = match[1]
+        return attributes
 
 
+e = HTML.parse_attributes("id='hey' class='school'")
+
+
+print(e)

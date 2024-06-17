@@ -1,5 +1,6 @@
 from html_ import HTML
 from custom_packages.searchTree import SearchTree
+import re
 
 
 
@@ -14,11 +15,12 @@ class DomTree:
         self.childrenNodes = []
         self.parentNode = parentNode
         self.textContent = textContent
+        self.atributes = {}
 
     def traverse(self, level=0):
         result = []
         indent_spaces = "    "*level
-        result.append(f"{indent_spaces}{self.tagname = } at level {level}")
+        result.append(f"{indent_spaces}{self.tagname = } {self.atributes = } at level {level}")
         for element in self.childrenNodes:
             element: DomTree
             result.extend(element.traverse(level=level+1))
@@ -44,12 +46,16 @@ class DomTree:
                 previus_element = at
                 at = DomTree(content, previus_element)
                 previus_element.childrenNodes.append(at)
+                pattern = re.match(r"(\w+)(.*)", content).group(0)
+                print(f"{pattern = }")
+                at.atributes = HTML.parse_attributes(pattern)
             elif Type == "endTag":
                 at = at.parentNode
             else:
                 at.textContent = content
                 text_tree.insertWithValue(content, at)
                 text_reverse_tree.insertWithValue(content[::-1], at)
+
                 
 
 
