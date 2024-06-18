@@ -305,16 +305,16 @@ class DomTree:
 
         return results
     
-    def best_common_selector(self, other: 'DomTree') -> str:
-        atributes = list(filter(lambda item: item[0] in other.atributes and item[1] == other.atributes[item[0]], self.atributes.items()))
-        classList = list(filter(lambda class_name: class_name in other.classList, self.classList))
-        if self.tagname == other.tagname:
+    def best_common_selector(self, *others: list['DomTree']) -> str:
+        atributes = list(filter(lambda item: all(item[0] in other.atributes for other in others) and all(item[1] == other.atributes[item[0]] for other in others), self.atributes.items()))
+        classList = list(filter(lambda class_name: all(class_name in other.classList  for other in others), self.classList))
+        if all(self.tagname == other.tagname for other in others):
             tag_name = self.tagname
         else:
             tag_name = None
 
 
-        closest_sharing_parrent: 'DomTree' = self.get_closest_sharing_parrent(other)
+        closest_sharing_parrent: 'DomTree' = self.get_closest_sharing_parrent(self, *others)
         query = closest_sharing_parrent.create_query() + f".search_for_elements({tag_name = }, {classList = }, None, {atributes = })"
 
         return query   

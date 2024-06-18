@@ -42,19 +42,16 @@ print(document.atributes)
 
 
 
-nav = document.search_for_element(tag_name='nav', class_name='fuck', id='fire')
 div = document.search_for_element(tag_name='div', class_name='fuck')
-another_nav = document.querySelectorAll("nav")[1]
+another_div = document.search_for_elements(tag_name='div')[-1]
 
 
-print(f"{div = }")
-cp = nav.best_common_selector(div)
 
 
 # cp: DomTree = nav.get_closest_sharing_parrent(div)
 
 # print(f"{cp.create_query() = }")
-bcs = nav.best_common_selector(another_nav, div)
+bcs = div.best_common_selector(another_div)
 
 print(f"{bcs = }")
 
