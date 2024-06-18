@@ -1,7 +1,14 @@
+"""global constants:
+        INDENT: used place in indents in the generated code
+        text_tree, text_reverse_tree: used for searching for elements by text dinamicly"""
+
+
+
 from html_ import HTML
-from collections import defaultdict
+# from collections import defaultdict
 from custom_packages.searchTree import SearchTree
 import re
+from colors import blue, green, yellow
 
 
 INDENT = "  "
@@ -16,9 +23,10 @@ class DomTree:
         self.childrenNodes = []
         self.parentNode = parentNode
         self.textContent = textContent
-        self.atributes = defaultdict(None)
         self.classList = []
         self.id = None
+
+        self.atributes = {}
 
     def traverse(self, level=0):
         result = []
@@ -31,7 +39,7 @@ class DomTree:
         return result
     
     def __repr__(self):
-        return '\n'.join(self.traverse())
+        return f"{blue(self.tagname)} {self.id = } class={self.classList} {' '.join(yellow(f'{attr}={self.atributes[attr]}') for attr in self.atributes.keys())}"
             
 
     @classmethod
@@ -255,7 +263,7 @@ class DomTree:
 
 
 
-    
+
     def search_for_element(self, tag_name=None, class_name=None, id=None, atributes = {}) -> 'DomTree':
         print(f"{atributes = }")
         for node in self.childrenNodes:
@@ -277,15 +285,15 @@ class DomTree:
             if result_in_child:
                 return result_in_child
             
-    def search_for_elements(self, tag_name=None, class_name=None, id=None, **atributes) -> list['DomTree']:
+    def search_for_elements(self, tag_name=None, class_name=None, id=None, atributes={}) -> list['DomTree']:
         results = []
         for node in self.childrenNodes:
             node: DomTree
-            if node.tagname != tag_name:
+            if tag_name and node.tagname != tag_name:
                 continue
-            if node.atributes.get('class') != class_name:
+            if class_name and class_name not in node.classList:
                 continue
-            if node.atributes.get('id') != id:
+            if id and node.id != id:
                 continue
             if any(node.atributes.get(atr) != atributes[atr] for atr in atributes):
                 continue
@@ -293,11 +301,23 @@ class DomTree:
         
         for node in self.childrenNodes:
             node: DomTree
-            results.extend(node.search_for_element(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes))
+            results.extend(node.search_for_elements(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes))
 
         return results
+    
+    def best_common_selector(self, other: 'DomTree') -> str:
+        atributes = list(filter(lambda item: item[0] in other.atributes and item[1] == other.atributes[item[0]], self.atributes.items()))
+        classList = list(filter(lambda class_name: class_name in other.classList, self.classList))
+        if self.tagname == other.tagname:
+            tag_name = self.tagname
+        else:
+            tag_name = None
 
-                                
+
+        closest_sharing_parrent: 'DomTree' = self.get_closest_sharing_parrent(other)
+        query = closest_sharing_parrent.create_query() + f".search_for_elements({tag_name = }, {classList = }, None, {atributes = })"
+
+        return query   
 
                 
 

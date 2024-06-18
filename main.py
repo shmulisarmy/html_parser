@@ -4,11 +4,11 @@ from domTree import DomTree
 
 html_string = (
     "<body class='fuck'>\n"
-    "    <nav class='fuck' id='fire' data='team'>\n"
+    "    <nav class='fuck' id='fire' data='team' it='hello'>\n"
     "        <div>\n"
     "            hello\n"
     "        </div>\n"
-    "        <div>\n"
+    "        <div class='fuck' it='hello'>\n"
     "            hello you\n"
     "        </div>\n"
     "    </nav>\n"
@@ -43,21 +43,20 @@ print(document.atributes)
 
 
 nav = document.search_for_element(tag_name='nav', class_name='fuck', id='fire')
-div = document.search_for_element(tag_name='div')
+div = document.search_for_element(tag_name='div', class_name='fuck')
+another_nav = document.querySelectorAll("nav")[1]
 
 
 print(f"{div = }")
-
-cp: DomTree = nav.get_closest_sharing_parrent(div)
-
-print(cp.create_query())
-
-# from domTree import text_tree
+cp = nav.best_common_selector(div)
 
 
-# text_tree.debug()
+# cp: DomTree = nav.get_closest_sharing_parrent(div)
+
+# print(f"{cp.create_query() = }")
+bcs = nav.best_common_selector(another_nav, div)
+
+print(f"{bcs = }")
 
 
-# print()
-# print(f"{[[node.textContent for node in combo] for combo in DomTree.find_by_text('hellohelloyouyou')] = }")
-
+# print(f"{document.querySelector('body').search_for_elements(tag_name = None, class_name = 'fuck', id = None) = }")
