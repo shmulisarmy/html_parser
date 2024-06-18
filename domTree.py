@@ -8,7 +8,12 @@ from html_ import HTML
 # from collections import defaultdict
 from custom_packages.searchTree import SearchTree
 import re
+from string import ascii_uppercase
+
 from colors import blue, green, yellow
+from utils import infinite_number_generator
+
+ascii_uppercase = (letter for letter in ascii_uppercase)
 
 
 INDENT = "  "
@@ -44,14 +49,14 @@ class DomTree:
 
     @classmethod
     def create_document_from(cls, html_node_list: list['DomTree']):
-        begin = 0
-        end = len(html_node_list)-1
+        begin_index: int = 0
+        ending_index: int = len(html_node_list)-1
 
         document = DomTree("document")
-        at = document
+        at: DomTree = document
 
-        while begin < end:
-            html_node = html_node_list[begin]
+        while begin_index < ending_index:
+            html_node: DomTree = html_node_list[begin_index]
             Type, content = HTML.str_type(html_node)
             if Type == "tag":
                 previus_element = at
@@ -78,34 +83,64 @@ class DomTree:
 
 
 
-            begin += 1
+            begin_index += 1
 
         return document
     
-    @classmethod
-    def create_template(cls, html_node_list):
-        begin = 0
-        end = len(html_node_list)-1
+    # @classmethod
+    # def create_template(cls, html_node_list):
+    #     begin = 0
+    #     end = len(html_node_list)-1
 
-        document = DomTree("document")
-        at = document
+    #     document = DomTree("document")
+    #     at = document
 
-        print(f"function create_element(){'{'}")
+    #     print(f"function create_element(){'{'}")
 
-        while begin < end:
-            html_node = html_node_list[begin]
-            Type, content = HTML.str_type(html_node)
-            if Type == "tag":
-                previus_element = at
-                at = DomTree(content, previus_element)
-                previus_element.childrenNodes.append(at)
-                print(f"{INDENT}const {content} = document.createElement('{content}')")
-                print(f"{INDENT}{previus_element.tagname}.appendChild({content})")
-            elif Type == "endTag":
-                at = at.parentNode
+    #     while begin < end:
+    #         html_node = html_node_list[begin]
+    #         Type, content = HTML.str_type(html_node)
+    #         if Type == "tag":
+    #             previus_element = at
+    #             at = DomTree(content, previus_element)
+    #             previus_element.childrenNodes.append(at)
+    #             print(f"{INDENT}{blue('const')} {content} = document.createElement('{content}')")
+    #             print(f"{INDENT}{previus_element.tagname}.appendChild({content})")
+    #         elif Type == "endTag":
+    #             at = at.parentNode
 
 
-            begin += 1
+    #         begin += 1
+
+    def create_template(self, level = 0):
+        letter_using: str = next(ascii_uppercase)
+        ng = infinite_number_generator()
+        tempalate_top = f"{letter_using}{next(ng)}"
+
+        if level == 0:
+            print(f"{yellow('function')} create_element(){'{'}")
+        print(f"{INDENT}{blue('const')} {tempalate_top} = document.createElement('{self.tagname}')")
+
+        for child_node in self.childrenNodes:
+                child_node: DomTree
+
+                if child_node.childrenNodes:
+                    this_template_name: str = child_node.create_template(level+1)
+                    print(f"{INDENT}{tempalate_top}.appendChild({this_template_name})")
+
+                template_new_inner_element: str = green(f"{letter_using}{next(ng)}")
+                print(f"{INDENT}{blue('const')} = document.createElement('{child_node.tagname}')")
+                if child_node.id:
+                    print(f"{INDENT}{template_new_inner_element}.id = '{child_node.id}'")
+                for cls in child_node.classList:
+                    print(f"{INDENT}{template_new_inner_element}.classList.add('{cls}')")
+                for attr_name, attr_value in child_node.atributes.items():
+                    print(f"{INDENT}{template_new_inner_element}.setatribute('{attr_name}', '{attr_value}')")
+
+                print(f"{INDENT}{tempalate_top}.appendChild({template_new_inner_element})")
+
+        return tempalate_top
+           
 
     
     def querySelector(self, query: str):

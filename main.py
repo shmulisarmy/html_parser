@@ -46,7 +46,7 @@ div = document.search_for_element(tag_name='div', class_name='fuck')
 another_div = document.search_for_elements(tag_name='div')[-1]
 
 
-
+print(div.create_template())
 
 # cp: DomTree = nav.get_closest_sharing_parrent(div)
 
@@ -54,6 +54,9 @@ another_div = document.search_for_elements(tag_name='div')[-1]
 bcs = div.best_common_selector(another_div)
 
 print(f"{bcs = }")
+
+
+document.create_template()
 
 
 # print(f"{document.querySelector('body').search_for_elements(tag_name = None, class_name = 'fuck', id = None) = }")
