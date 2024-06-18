@@ -215,21 +215,6 @@ class DomTree:
             yield (index, node)
             index+=1
     
-    # def get_closest_sharing_parrent(self, other) -> 'DomTree':
-    #     assert isinstance(other, DomTree)
-    #     """brute force: n(n) complexity"""
-
-    #     best_pair: list['DomTree']|None = None
-    #     closest_dom_distance = float('inf')
-    #     for index, parrent in self.recursive_parrents():
-    #         for other_index, other_parrent in other.recursive_parrents():
-    #             if parrent == other_parrent:
-    #                 current_dom_distance = index+other_index
-    #                 if current_dom_distance < closest_dom_distance:
-    #                     best_pair = [parrent, other_parrent]
-    #                     closest_dom_distance = current_dom_distance
-
-    #     return best_pair
     
     def get_closest_sharing_parrent(*nodes: list['DomTree']) -> 'DomTree':
         """n*2 time and space complexity"""
