@@ -206,7 +206,7 @@ class DomTree:
             index+=1
         return results
 
-    def recursive_parrents_iterator(self):
+    def recursive_parrents_enumerater(self):
         """works like an enumerater"""
         node = self
         index = 0
@@ -215,21 +215,61 @@ class DomTree:
             yield (index, node)
             index+=1
     
-    def get_closest_sharing_parrent(self, other) -> 'DomTree':
-        assert isinstance(other, DomTree)
-        """brute force: n(n) complexity"""
+    # def get_closest_sharing_parrent(self, other) -> 'DomTree':
+    #     assert isinstance(other, DomTree)
+    #     """brute force: n(n) complexity"""
 
-        best_pair: list['DomTree']|None = None
-        closest_dom_distance = float('inf')
-        for index, parrent in self.recursive_parrents():
-            for other_index, other_parrent in other.recursive_parrents():
-                if parrent == other_parrent:
-                    current_dom_distance = index+other_index
-                    if current_dom_distance < closest_dom_distance:
-                        best_pair = [parrent, other_parrent]
-                        closest_dom_distance = current_dom_distance
+    #     best_pair: list['DomTree']|None = None
+    #     closest_dom_distance = float('inf')
+    #     for index, parrent in self.recursive_parrents():
+    #         for other_index, other_parrent in other.recursive_parrents():
+    #             if parrent == other_parrent:
+    #                 current_dom_distance = index+other_index
+    #                 if current_dom_distance < closest_dom_distance:
+    #                     best_pair = [parrent, other_parrent]
+    #                     closest_dom_distance = current_dom_distance
 
-        return best_pair
+    #     return best_pair
+    
+    def get_closest_sharing_parrent(*others: list['DomTree']) -> 'DomTree':
+        """n*2 time and space complexity"""
+
+        all_parrents = {}
+        for element in others:
+            assert isinstance(element, DomTree) #because it is plausable to make a mistake and have it be None via an invalid selector...
+            element: DomTree
+            for index, parrent in element.recursive_parrents_enumerater():
+                parrent: DomTree
+                if parrent not in all_parrents:
+                    all_parrents[parrent] = [0, 0]
+                all_parrents[parrent][0] += 1
+                all_parrents[parrent][1] += index
+
+        total_element_count = len(others)
+
+
+        # part of higher order function
+        def is_parrent_of_all_elements(parrent_as_a_key):
+            value = all_parrents[parrent_as_a_key]
+            number_of_children_here = value[0]
+
+            return number_of_children_here == total_element_count
+
+
+        sharing_parrents: iter = list(filter(is_parrent_of_all_elements, all_parrents.keys()))
+
+        closest_parrent_distance = float('inf')
+        closest_parrent = None
+        for parrent in sharing_parrents:
+            distance: int = all_parrents[parrent][1] 
+            if distance < closest_parrent_distance:
+                closest_parrent = parrent
+                closest_parrent_distance = distance
+
+        return closest_parrent
+
+
+
     
     def search_for_element(self, tag_name=None, class_name=None, id=None, atributes = {}) -> 'DomTree':
         print(f"{atributes = }")

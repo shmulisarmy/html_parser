@@ -46,9 +46,11 @@ nav = document.search_for_element(tag_name='nav', class_name='fuck', id='fire')
 div = document.search_for_element(tag_name='div')
 
 
-cp = nav.get_closest_sharing_parrent(div)
+print(f"{div = }")
 
-print(cp)
+cp: DomTree = nav.get_closest_sharing_parrent(div)
+
+print(cp.create_query())
 
 # from domTree import text_tree
 
