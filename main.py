@@ -4,7 +4,7 @@ from domTree import DomTree
 
 html_string = (
     "<body class='fuck'>\n"
-    "    <nav class='fuck' id='fire'>\n"
+    "    <nav class='fuck' id='fire' data='team'>\n"
     "        <div>\n"
     "            hello\n"
     "        </div>\n"

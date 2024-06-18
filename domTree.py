@@ -17,8 +17,8 @@ class DomTree:
         self.parentNode = parentNode
         self.textContent = textContent
         self.atributes = defaultdict(None)
-        self.atributes['class'] = None
-        self.atributes['id'] = None
+        self.classList = []
+        self.id = None
 
     def traverse(self, level=0):
         result = []
@@ -52,7 +52,14 @@ class DomTree:
                 at = DomTree(tag_name, previus_element)
                 previus_element.childrenNodes.append(at)
                 pattern = re.match(r"(\w+)(.*)", content).group(0)
-                at.atributes = HTML.parse_attributes(pattern)
+                atributes = HTML.parse_attributes(pattern)
+                if 'id' in atributes:
+                    at.id = atributes['id']
+                    del atributes['id']
+                if 'class' in atributes:
+                    at.classList = atributes['class'].split(" ")
+                    del atributes['class']
+                at.atributes = atributes
             elif Type == "endTag":
                 at = at.parentNode
             else:
@@ -209,6 +216,7 @@ class DomTree:
             index+=1
     
     def get_closest_sharing_parrent(self, other) -> 'DomTree':
+        assert isinstance(other, DomTree)
         """brute force: n(n) complexity"""
 
         best_pair: list['DomTree']|None = None
@@ -230,9 +238,9 @@ class DomTree:
             if node.tagname != tag_name:
                 continue
             print(f"{node.atributes = }")
-            if node.atributes.get('class') != class_name:
+            if (class_name and class_name not in node.classList):
                 continue
-            if node.atributes.get('id') != id:
+            if (id and node.id != id):
                 continue
             if any(node.atributes.get(atr) != atributes[atr] for atr in atributes):
                 continue
