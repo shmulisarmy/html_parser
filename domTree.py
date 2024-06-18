@@ -231,11 +231,11 @@ class DomTree:
 
     #     return best_pair
     
-    def get_closest_sharing_parrent(*others: list['DomTree']) -> 'DomTree':
+    def get_closest_sharing_parrent(*nodes: list['DomTree']) -> 'DomTree':
         """n*2 time and space complexity"""
 
         all_parrents = {}
-        for element in others:
+        for element in nodes:
             assert isinstance(element, DomTree) #because it is plausable to make a mistake and have it be None via an invalid selector...
             element: DomTree
             for index, parrent in element.recursive_parrents_enumerater():
@@ -245,7 +245,7 @@ class DomTree:
                 all_parrents[parrent][0] += 1
                 all_parrents[parrent][1] += index
 
-        total_element_count = len(others)
+        total_element_count = len(nodes)
 
 
         # part of higher order function
