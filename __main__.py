@@ -56,4 +56,4 @@ matching_text_elements = document.find_by_text("hellofuckyouyou")
 print(f"{matching_text_elements = }")
 
 
-print(f"{[node for node in document.breadth_first_search_child_generator()]}")
+print(f"{[node for node in document.depth_first_search_child_generator()]}")

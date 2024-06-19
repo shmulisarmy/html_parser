@@ -254,6 +254,14 @@ class DomTree:
             child_node: DomTree
             for childs_child in child_node.breadth_first_search_child_generator():
                 yield childs_child
+
+    def depth_first_search_child_generator(self):
+        """works like an enumerater"""
+        for child_node in self.childrenNodes:
+            child_node: DomTree
+            yield child_node        
+            for childs_child in child_node.depth_first_search_child_generator():
+                yield childs_child
     
     
     def get_closest_sharing_parrent(*nodes: list['DomTree']) -> 'DomTree':
