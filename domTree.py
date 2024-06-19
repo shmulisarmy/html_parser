@@ -23,6 +23,8 @@ text_reverse_tree = SearchTree()
 
 
 class DomTree:
+    """params:
+            cached_children: usefull for an element that will get many queries (may it be querySelectorAll or one of the text match finders) where order doesnt matter"""
     def __init__(self, tagname, parentNode = None, textContent = None):
         self.tagname = tagname
         self.childrenNodes = []
@@ -31,6 +33,19 @@ class DomTree:
         self.classList = []
         self.id = None
         self.atributes = {}
+        self.parrentsWithUpdatingCache: list = []
+        self.cached_children: list = []
+
+    def appendChild(self, newChild: 'DomTree'):
+        self.childrenNodes.append(newChild)
+        for parrent in self.parrentsWithUpdatingCache:
+            parrent: DomTree
+            parrent.cached_children.append(newChild)
+
+    def place_child_in_cache(self, newChild: 'DomTree'):
+        self.cached_children.append(newChild)
+        newChild.parrentsWithUpdatingCache.append(self)
+        
 
     def traverse(self, level=0):
         result = []
@@ -62,7 +77,7 @@ class DomTree:
                 find_tag_name_pattern = re.compile("\w+")
                 tag_name: str = find_tag_name_pattern.match(content).group(0)
                 at = DomTree(tag_name, previus_element)
-                previus_element.childrenNodes.append(at)
+                previus_element.appendChild(at)
                 pattern = re.match(r"(\w+)(.*)", content).group(0)
                 atributes = HTML.parse_attributes(pattern)
                 if 'id' in atributes:
