@@ -364,6 +364,8 @@ class DomTree:
         return results
     
     def best_common_selector(self, *others: list['DomTree']) -> str:
+        print(f"{others = }")
+        assert all(isinstance(other, DomTree) for other in others)
         atributes = list(filter(lambda item: all(item[0] in other.atributes for other in others) and all(item[1] == other.atributes[item[0]] for other in others), self.atributes.items()))
         classList = list(filter(lambda class_name: all(class_name in other.classList  for other in others), self.classList))
         if all(self.tagname == other.tagname for other in others):

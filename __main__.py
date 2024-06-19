@@ -19,7 +19,7 @@ html_string = (
     "</body>"
 ) 
 
-
+print(f"{html_string = }")
 
 
 
@@ -51,9 +51,25 @@ bcs = div.best_common_selector(another_div)
 print(f"{bcs = }")
 
 
-matching_text_elements = document.find_by_text("hellofuckyou")
+matching_text_elements: list[list[DomTree]] = document.find_by_text("hellofuck")
 
-print(f"{matching_text_elements = }")
+
+
+first_matching_text_elements: list[DomTree] = matching_text_elements[0]
+
+print(f"{first_matching_text_elements = }")
+
+best_common_selector = first_matching_text_elements[0].best_common_selector(*first_matching_text_elements[1:])
+
+
+
+print(f"{best_common_selector = }")
+
+
+
+tested_selector = document.querySelector('body').search_for_elements(tag_name = 'div')
+
+print(f"{tested_selector = }")
 
 
 # print(f"{[node for node in document.depth_first_search_child_generator()]}")
