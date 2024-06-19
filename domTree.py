@@ -23,6 +23,8 @@ text_reverse_tree = SearchTree()
 
 
 class DomTree:
+    """params:
+            cached_children: usefull for an element that will get many queries (may it be querySelectorAll or one of the text match finders) where order doesnt matter"""
     def __init__(self, tagname, parentNode = None, textContent = None):
         self.tagname = tagname
         self.childrenNodes = []
