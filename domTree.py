@@ -220,7 +220,6 @@ class DomTree:
         text_tree_results = text_tree.getValueListOfBestMatches(search_text)
         text_reverse_tree_results = text_reverse_tree.getValueListOfBestMatches(search_text[::-1])
 
-
         print(f"{[node.textContent for node in text_tree_results] = }")
         print(f"{[node.textContent for node in text_reverse_tree_results] = }")
 
