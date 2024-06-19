@@ -197,23 +197,6 @@ class DomTree:
             elif char_match_amount == greatest_match:
                 best_node_matchs.append(node)
 
-    # @classmethod
-    # def find_by_text(cls, search_text: str):
-    #     text_tree_results = sorted(text_tree.getValueListOfBestMatchest(search_text), key = lambda node: len(node.textContent), reverse=True)
-    #     text_reverse_tree_results = sorted(text_reverse_tree.getValueListOfBestMatchest(search_text[::-1]), key = lambda node: len(node.textContent), reverse=True)
-
-
-    #     index_ = 0
-    #     reverses_index_ = 0
-
-    #     best_match = None
-
-    #     while True:
-    #         if len(text_tree_results[index_].textContent) + len(text_tree_results[index_].textContent) < len(search_text):
-    #             best_match = [text_reverse_tree_results[index_], text_tree_results[index_].textContent]
-    #         else:
-    #             smaller_current = min(len(text_reverse_tree_results[index_].textContent), len(text_reverse_tree_results[reverses_index_].textContent))
-
 
     @classmethod
     def find_by_text(cls, search_text: str) -> list[list['DomTree']]:
