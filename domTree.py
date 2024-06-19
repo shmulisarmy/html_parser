@@ -182,10 +182,12 @@ class DomTree:
             if id(element) == id(node):
                 return f"{parrent.create_query()}.querySelectorAll({query})[{index}]"
 
+
     def find_best_text_match(node, search_text: str):
+        """recursively check children for best match"""
         greatest_match: int = 0
         best_node_matchs = []
-        for child_node in node.childrenNodes:
+        for child_node in node.breadth_first_search_child_generator():
             child_node: DomTree
             comparing_against: str = child_node.textContent
             if len(comparing_against) < greatest_match:
@@ -193,9 +195,9 @@ class DomTree:
             char_match_amount = char_match_amount(search_text, comparing_against)
             if char_match_amount > greatest_match:
                 greatest_match = char_match_amount
-                best_node_matchs = [node]
+                best_node_matchs = [child_node]
             elif char_match_amount == greatest_match:
-                best_node_matchs.append(node)
+                best_node_matchs.append(child_node)
 
 
     @classmethod
@@ -243,6 +245,25 @@ class DomTree:
             node = node.parentNode
             yield (index, node)
             index+=1
+
+    def breadth_first_search_child_generator(self):
+        """works like an enumerater"""
+        for child_node in self.childrenNodes:
+            yield child_node
+
+        
+        for child_node in self.childrenNodes:
+            child_node: DomTree
+            for childs_child in child_node.breadth_first_search_child_generator():
+                yield childs_child
+
+    def depth_first_search_child_generator(self):
+        """works like an enumerater"""
+        for child_node in self.childrenNodes:
+            child_node: DomTree
+            yield child_node        
+            for childs_child in child_node.depth_first_search_child_generator():
+                yield childs_child
     
     
     def get_closest_sharing_parrent(*nodes: list['DomTree']) -> 'DomTree':
