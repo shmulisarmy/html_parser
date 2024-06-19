@@ -32,4 +32,3 @@ document.create_template(html_node_list)
 ```python
 document.querySelector("div")
 
-```
