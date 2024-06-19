@@ -30,7 +30,6 @@ class DomTree:
         self.textContent = textContent
         self.classList = []
         self.id = None
-
         self.atributes = {}
 
     def traverse(self, level=0):
