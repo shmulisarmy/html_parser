@@ -182,20 +182,20 @@ class DomTree:
             if id(element) == id(node):
                 return f"{parrent.create_query()}.querySelectorAll({query})[{index}]"
 
-    # def find_by_text(node, search_text: str):
-    #     greatest_match: int = 0
-    #     best_node_matchs = []
-    #     for child_node in node.childrenNodes:
-    #         child_node: DomTree
-    #         comparing_against: str = child_node.textContent
-    #         if len(comparing_against) < greatest_match:
-    #             continue
-    #         char_match_amount = char_match_amount(search_text, comparing_against)
-    #         if char_match_amount > greatest_match:
-    #             greatest_match = char_match_amount
-    #             best_node_matchs = [node]
-    #         elif char_match_amount == greatest_match:
-    #             best_node_matchs.append(node)
+    def find_best_text_match(node, search_text: str):
+        greatest_match: int = 0
+        best_node_matchs = []
+        for child_node in node.childrenNodes:
+            child_node: DomTree
+            comparing_against: str = child_node.textContent
+            if len(comparing_against) < greatest_match:
+                continue
+            char_match_amount = char_match_amount(search_text, comparing_against)
+            if char_match_amount > greatest_match:
+                greatest_match = char_match_amount
+                best_node_matchs = [node]
+            elif char_match_amount == greatest_match:
+                best_node_matchs.append(node)
 
     # @classmethod
     # def find_by_text(cls, search_text: str):
