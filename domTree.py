@@ -246,7 +246,6 @@ class DomTree:
 
     def breadth_first_search_child_generator(self):
         """works like an enumerater"""
-        node = self
         for child_node in self.childrenNodes:
             yield child_node
 
