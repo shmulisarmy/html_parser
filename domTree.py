@@ -44,7 +44,7 @@ class DomTree:
         return result
     
     def __repr__(self):
-        return f"{blue(self.tagname)} {self.id = } class={self.classList} {' '.join(yellow(f'{attr}={self.atributes[attr]}') for attr in self.atributes.keys())}"
+        return f"{blue(self.tagname)} {self.id = } class={self.classList} {' '.join(yellow(f'{attr}={self.atributes[attr]}') for attr in self.atributes.keys())} {f'text = {self.textContent}' if self.textContent else ''}"
             
 
     @classmethod
@@ -78,7 +78,7 @@ class DomTree:
             else:
                 at.textContent = content
                 text_tree.insertWithValue(content, at)
-                text_reverse_tree.insertWithValue(content[::-1], at)
+                text_reverse_tree.insertWithValue(content[::-1].strip(), at)
 
 
 
@@ -216,25 +216,29 @@ class DomTree:
 
 
     @classmethod
-    def find_by_text(cls, search_text: str) -> list['DomTree']:
-        text_tree_results = text_tree.getValueListOfBestMatches(search_text)
-        text_reverse_tree_results = text_reverse_tree.getValueListOfBestMatches(search_text[::-1])
+    def find_by_text(cls, search_text: str) -> list[list['DomTree']]:
+        text_tree_results: list[DomTree] = text_tree.getValueListOfBestMatches(search_text)
+        text_reverse_tree_results: list[DomTree] = text_reverse_tree.getValueListOfBestMatches(search_text[::-1])
 
         print(f"{[node.textContent for node in text_tree_results] = }")
         print(f"{[node.textContent for node in text_reverse_tree_results] = }")
 
         resulting_node_combos = []
 
-        for index_, current_text in enumerate(text_tree_results):
-            for textContent, current_reverse in enumerate(text_reverse_tree_results):
-                if len(current_text.textContent) + len(current_reverse.textContent) > len(search_text):
+        for index_, text_tree_results_current_node in enumerate(text_tree_results):
+            for textContent, text_reverse_tree_results_current_node in enumerate(text_reverse_tree_results):
+                if len(text_tree_results_current_node.textContent) + len(text_reverse_tree_results_current_node.textContent) > len(search_text):
                     continue
-                middle_text = search_text[len(current_text.textContent):-len(current_reverse.textContent)] 
+                middle_text = search_text[len(text_tree_results_current_node.textContent):-len(text_reverse_tree_results_current_node.textContent)] 
                 if not middle_text:
-                    resulting_node_combos.append([current_text, current_reverse])
+                    resulting_node_combos.append([text_tree_results_current_node, text_reverse_tree_results_current_node])
                 else:
                     middle_results = DomTree.find_by_text(middle_text)
-                    resulting_node_combos.extend([current_text + inner_combo + current_reverse for inner_combo in middle_results])
+                    for result in middle_results:
+                        r = [text_tree_results_current_node, text_reverse_tree_results_current_node]
+                        r.extend(result)
+                        resulting_node_combos.append(r)
+
 
         return resulting_node_combos
     
