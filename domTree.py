@@ -58,7 +58,7 @@ class DomTree:
         return result
     
     def __repr__(self):
-        return f"{blue(self.tagname)} {self.id = } class={self.classList} {' '.join(yellow(f'{attr}={self.atributes[attr]}') for attr in self.atributes.keys())} {f'text = {self.textContent}' if self.textContent else ''}"
+        return f"{blue(self.tagname)} {self.id = } class={self.classList} {' '.join(yellow(f'{attr}={self.atributes[attr]}') for attr in self.atributes.keys())} {f'text = {green(self.textContent)}' if self.textContent else ''}"
             
 
     @classmethod
@@ -231,6 +231,8 @@ class DomTree:
                 middle_text = search_text[len(text_tree_results_current_node.textContent):-len(text_reverse_tree_results_current_node.textContent)] 
                 if not middle_text:
                     resulting_node_combos.append([text_tree_results_current_node, text_reverse_tree_results_current_node])
+                elif text_tree.isWord(middle_text):
+                    resulting_node_combos.append([text_tree_results_current_node, text_tree.getValue(middle_text), text_reverse_tree_results_current_node])
                 else:
                     middle_results = DomTree.find_by_text(middle_text)
                     for result in middle_results:

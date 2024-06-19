@@ -51,9 +51,9 @@ bcs = div.best_common_selector(another_div)
 print(f"{bcs = }")
 
 
-matching_text_elements = document.find_by_text("hellofuckyouyou")
+matching_text_elements = document.find_by_text("hellofuckyou")
 
 print(f"{matching_text_elements = }")
 
 
-print(f"{[node for node in document.depth_first_search_child_generator()]}")
+# print(f"{[node for node in document.depth_first_search_child_generator()]}")
