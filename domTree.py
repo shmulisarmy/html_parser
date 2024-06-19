@@ -217,8 +217,8 @@ class DomTree:
 
     @classmethod
     def find_by_text(cls, search_text: str) -> list['DomTree']:
-        text_tree_results = text_tree.getValueListOfBestMatchest(search_text)
-        text_reverse_tree_results = text_reverse_tree.getValueListOfBestMatchest(search_text[::-1])
+        text_tree_results = text_tree.getValueListOfBestMatches(search_text)
+        text_reverse_tree_results = text_reverse_tree.getValueListOfBestMatches(search_text[::-1])
 
 
         print(f"{[node.textContent for node in text_tree_results] = }")
