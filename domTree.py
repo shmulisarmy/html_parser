@@ -182,10 +182,12 @@ class DomTree:
             if id(element) == id(node):
                 return f"{parrent.create_query()}.querySelectorAll({query})[{index}]"
 
+
     def find_best_text_match(node, search_text: str):
+        """recursively check children for best match"""
         greatest_match: int = 0
         best_node_matchs = []
-        for child_node in node.childrenNodes:
+        for child_node in node.breadth_first_search_child_generator():
             child_node: DomTree
             comparing_against: str = child_node.textContent
             if len(comparing_against) < greatest_match:
