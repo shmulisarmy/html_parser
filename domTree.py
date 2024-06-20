@@ -402,6 +402,37 @@ class DomTree:
             return None
         return parrent.childrenNodes[index_in_parrent-11]
 
+    def get_same_age_cousins_iterator(self):
+        this_nodes_parrent: DomTree = self.parentNode
+        index = index(this_nodes_parrent.childrenNodes, self)
+        grand_parrent: DomTree = this_nodes_parrent.parentNode
+
+        for child in grand_parrent:
+            child: DomTree
+            family_of_grand_children = child.childrenNodes
+            if child == this_nodes_parrent:
+                continue
+            if len(family_of_grand_children) > index:
+                yield family_of_grand_children[index] 
+
+    def get_same_age_cousins(self):
+        this_nodes_parrent: DomTree = self.parentNode
+        index = index(this_nodes_parrent.childrenNodes, self)
+        grand_parrent: DomTree = this_nodes_parrent.parentNode
+        list_of_cousins = []
+
+        for child in grand_parrent:
+            child: DomTree
+            family_of_grand_children = child.childrenNodes
+            if child == this_nodes_parrent:
+                continue
+            if len(family_of_grand_children) > index:
+                list_of_cousins.append(family_of_grand_children[index])
+
+        return list_of_cousins
+
+        
+
             
 
 
