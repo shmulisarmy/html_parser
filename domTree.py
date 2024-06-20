@@ -5,6 +5,7 @@
 
 
 from html_ import HTML
+from utils import char_match_amount
 # from collections import defaultdict
 from custom_packages.searchTree import SearchTree
 import re
@@ -100,31 +101,6 @@ class DomTree:
             begin_index += 1
 
         return document
-    
-    # @classmethod
-    # def create_template(cls, html_node_list):
-    #     begin = 0
-    #     end = len(html_node_list)-1
-
-    #     document = DomTree("document")
-    #     at = document
-
-    #     print(f"function create_element(){'{'}")
-
-    #     while begin < end:
-    #         html_node = html_node_list[begin]
-    #         Type, content = HTML.str_type(html_node)
-    #         if Type == "tag":
-    #             previus_element = at
-    #             at = DomTree(content, previus_element)
-    #             previus_element.childrenNodes.append(at)
-    #             print(f"{INDENT}{blue('const')} {content} = document.createElement('{content}')")
-    #             print(f"{INDENT}{previus_element.tagname}.appendChild({content})")
-    #         elif Type == "endTag":
-    #             at = at.parentNode
-
-
-    #         begin += 1
 
     def create_template(self, level = 0):
         letter_using: str = next(ascii_uppercase)
@@ -158,26 +134,19 @@ class DomTree:
 
     
     def querySelector(self, query: str):
-        for node in self.childrenNodes:
+        for node in self.breadth_first_search_child_generator():
             node: DomTree
             if node.tagname == query:
                 return node
             
-        for node in self.childrenNodes:
-            queried_node = node.querySelector(query)
-            if queried_node:
-                return queried_node
-            
+                
     def querySelectorAll(self, query: str):
         results = []
-        for node in self.childrenNodes:
+        for node in self.breadth_first_search_child_generator():
             node: DomTree
             if node.tagname == query:
                 results.append(node)
             
-        for node in self.childrenNodes:
-            results.extend(node.querySelectorAll(query))
-
         return results
 
 
@@ -430,17 +399,3 @@ class DomTree:
                 list_of_cousins.append(family_of_grand_children[index])
 
         return list_of_cousins
-
-        
-
-            
-
-
-def char_match_amount(a: str, b: str) -> int|bool:
-    match_amount: int = 0
-    for index in range(min(len(a), len(b))):
-        if a[index] == b[index]:
-            match_amount += 1
-        else:
-            return match_amount
-    return index+1
