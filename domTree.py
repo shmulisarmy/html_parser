@@ -203,15 +203,20 @@ class DomTree:
         best_node_matchs = []
         for child_node in node.breadth_first_search_child_generator():
             child_node: DomTree
+            if not child_node.textContent:
+                continue
             comparing_against: str = child_node.textContent
             if len(comparing_against) < greatest_match:
                 continue
-            char_match_amount = char_match_amount(search_text, comparing_against)
-            if char_match_amount > greatest_match:
-                greatest_match = char_match_amount
+            match_amount = char_match_amount(search_text, comparing_against)
+            print(f"{greatest_match = } {match_amount = }")
+            if match_amount > greatest_match:
+                greatest_match = match_amount
                 best_node_matchs = [child_node]
-            elif char_match_amount == greatest_match:
+            elif match_amount == greatest_match:
                 best_node_matchs.append(child_node)
+
+        return best_node_matchs
 
 
     @classmethod
@@ -401,10 +406,10 @@ class DomTree:
 
 
 def char_match_amount(a: str, b: str) -> int|bool:
-    chars_that_match: int = 0
-    for index in range(max(len(a), len(b))):
+    match_amount: int = 0
+    for index in range(min(len(a), len(b))):
         if a[index] == b[index]:
-            chars_that_match += 1
+            match_amount += 1
         else:
-            return char_match_amount
-    return True
+            return match_amount
+    return index+1

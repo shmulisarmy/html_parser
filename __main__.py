@@ -55,21 +55,24 @@ matching_text_elements: list[list[DomTree]] = document.find_by_text("hellofuck")
 
 
 
-first_matching_text_elements: list[DomTree] = matching_text_elements[0]
+# first_matching_text_elements: list[DomTree] = matching_text_elements[0]
 
-print(f"{first_matching_text_elements = }")
+# print(f"{first_matching_text_elements = }")
 
-best_common_selector = first_matching_text_elements[0].best_common_selector(*first_matching_text_elements[1:])
+# best_common_selector = first_matching_text_elements[0].best_common_selector(*first_matching_text_elements[1:])
 
 
 
-print(f"{best_common_selector = }")
+# print(f"{best_common_selector = }")
 
 
 
 tested_selector = document.querySelector('body').search_for_elements(tag_name = 'div')
 
 print(f"{tested_selector = }")
+
+
+print(document.find_best_text_match("hello"))
 
 
 # print(f"{[node for node in document.depth_first_search_child_generator()]}")
