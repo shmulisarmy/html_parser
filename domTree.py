@@ -378,9 +378,24 @@ class DomTree:
         query = closest_sharing_parrent.create_query() + f".search_for_elements({tag_name = }, {classList = }, None, {atributes = })"
 
         return query   
-
-                
-
+    
+    def next_sibling(self):
+        parrent: DomTree = self.parentNode
+        if not parrent:
+            return None
+        index_in_parrent = parrent.childrenNodes.index(self)
+        if len(parrent.childrenNodes) <= index_in_parrent +1:
+            return None
+        return parrent.childrenNodes[index_in_parrent+1]
+    
+    def previous_sibling(self):
+        parrent: DomTree = self.parentNode
+        if not parrent:
+            return None
+        index_in_parrent = parrent.childrenNodes.index(self)
+        if index_in_parrent-1 > 0:
+            return None
+        return parrent.childrenNodes[index_in_parrent-11]
 
             
 
