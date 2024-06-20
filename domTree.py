@@ -101,31 +101,6 @@ class DomTree:
             begin_index += 1
 
         return document
-    
-    # @classmethod
-    # def create_template(cls, html_node_list):
-    #     begin = 0
-    #     end = len(html_node_list)-1
-
-    #     document = DomTree("document")
-    #     at = document
-
-    #     print(f"function create_element(){'{'}")
-
-    #     while begin < end:
-    #         html_node = html_node_list[begin]
-    #         Type, content = HTML.str_type(html_node)
-    #         if Type == "tag":
-    #             previus_element = at
-    #             at = DomTree(content, previus_element)
-    #             previus_element.childrenNodes.append(at)
-    #             print(f"{INDENT}{blue('const')} {content} = document.createElement('{content}')")
-    #             print(f"{INDENT}{previus_element.tagname}.appendChild({content})")
-    #         elif Type == "endTag":
-    #             at = at.parentNode
-
-
-    #         begin += 1
 
     def create_template(self, level = 0):
         letter_using: str = next(ascii_uppercase)
