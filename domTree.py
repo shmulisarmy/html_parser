@@ -134,26 +134,19 @@ class DomTree:
 
     
     def querySelector(self, query: str):
-        for node in self.childrenNodes:
+        for node in self.breadth_first_search_child_generator():
             node: DomTree
             if node.tagname == query:
                 return node
             
-        for node in self.childrenNodes:
-            queried_node = node.querySelector(query)
-            if queried_node:
-                return queried_node
-            
+                
     def querySelectorAll(self, query: str):
         results = []
-        for node in self.childrenNodes:
+        for node in self.breadth_first_search_child_generator():
             node: DomTree
             if node.tagname == query:
                 results.append(node)
             
-        for node in self.childrenNodes:
-            results.extend(node.querySelectorAll(query))
-
         return results
 
 
@@ -406,7 +399,3 @@ class DomTree:
                 list_of_cousins.append(family_of_grand_children[index])
 
         return list_of_cousins
-
-        
-
-            
