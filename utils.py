@@ -1,13 +1,16 @@
 
+## not using now
+# def char_match_amount(a: str, b: str) -> int|bool:
+#     match_amount: int = 0
+#     for index in range(min(len(a), len(b))):
+#         if a[index] == b[index]:
+#             match_amount += 1
+#         else:
+#             return match_amount
+#     return index+1
 
-def char_match_amount(a: str, b: str) -> int|bool:
-    match_amount: int = 0
-    for index in range(min(len(a), len(b))):
-        if a[index] == b[index]:
-            match_amount += 1
-        else:
-            return match_amount
-    return index+1
+
+#def find_text_combo(text_combo: str, search_with_texts: list[str]):
 
 
 

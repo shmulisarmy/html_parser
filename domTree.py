@@ -5,7 +5,6 @@
 
 
 from html_ import HTML
-from utils import char_match_amount
 # from collections import defaultdict
 from custom_packages.searchTree import SearchTree
 import re
@@ -26,6 +25,7 @@ text_reverse_tree = SearchTree()
 class DomTree:
     """params:
             cached_children: usefull for an element that will get many queries (may it be querySelectorAll or one of the text match finders) where order doesnt matter"""
+    all_nodes_in_order: list
     def __init__(self, tagname, parentNode = None, textContent = None):
         self.tagname = tagname
         self.childrenNodes = []
@@ -46,7 +46,7 @@ class DomTree:
     def place_child_in_cache(self, newChild: 'DomTree'):
         self.cached_children.append(newChild)
         newChild.parrentsWithUpdatingCache.append(self)
-        
+
 
     def traverse(self, level=0):
         result = []
@@ -57,10 +57,10 @@ class DomTree:
             result.extend(element.traverse(level=level+1))
 
         return result
-    
+
     def __repr__(self):
         return f"{blue(self.tagname)} {self.id = } class={self.classList} {' '.join(yellow(f'{attr}={self.atributes[attr]}') for attr in self.atributes.keys())} {f'text = {green(self.textContent)}' if self.textContent else ''}"
-            
+
 
     @classmethod
     def create_document_from(cls, html_node_list: list['DomTree']):
@@ -130,23 +130,23 @@ class DomTree:
                 print(f"{INDENT}{tempalate_top}.appendChild({template_new_inner_element})")
 
         return tempalate_top
-           
 
-    
+
+
     def querySelector(self, query: str):
         for node in self.breadth_first_search_child_generator():
             node: DomTree
             if node.tagname == query:
                 return node
-            
-                
+
+
     def querySelectorAll(self, query: str):
         results = []
         for node in self.breadth_first_search_child_generator():
             node: DomTree
             if node.tagname == query:
                 results.append(node)
-            
+
         return results
 
 
@@ -155,7 +155,7 @@ class DomTree:
         query: str = node.tagname
         if not node.parentNode:
             return node.tagname
-        
+
         parrent: DomTree = node.parentNode
         all_similar_siblings = parrent.querySelectorAll(query)
         if len(all_similar_siblings) == 1:
@@ -166,26 +166,24 @@ class DomTree:
                 return f"{parrent.create_query()}.querySelectorAll({query})[{index}]"
 
 
-    def find_best_text_match(node, search_text: str):
-        """recursively check children for best match"""
-        greatest_match: int = 0
-        best_node_matchs = []
-        for child_node in node.breadth_first_search_child_generator():
-            child_node: DomTree
-            if not child_node.textContent:
-                continue
-            comparing_against: str = child_node.textContent
-            if len(comparing_against) < greatest_match:
-                continue
-            match_amount = char_match_amount(search_text, comparing_against)
-            print(f"{greatest_match = } {match_amount = }")
-            if match_amount > greatest_match:
-                greatest_match = match_amount
-                best_node_matchs = [child_node]
-            elif match_amount == greatest_match:
-                best_node_matchs.append(child_node)
+    # def find_best_text_match(node, search_text: str):
+    #     """recursively check children for best match"""
+    #     greatest_match: int = 0
+    #     best_node_matchs = []
+    #     for child_node in node.breadth_first_search_child_generator():
+    #         child_node: DomTree
+    #         if not child_node.textContent:
+    #             continue
+    #         comparing_against: str = child_node.textContent
+    #         if len(comparing_against) < greatest_match:
+    #             continue
 
-        return best_node_matchs
+    #             greatest_match = match_amount
+    #             best_node_matchs = [child_node]
+    #         elif match_amount == greatest_match:
+    #             best_node_matchs.append(child_node)
+
+    #     return best_node_matchs
 
 
     @classmethod
@@ -202,7 +200,7 @@ class DomTree:
             for textContent, text_reverse_tree_results_current_node in enumerate(text_reverse_tree_results):
                 if len(text_tree_results_current_node.textContent) + len(text_reverse_tree_results_current_node.textContent) > len(search_text):
                     continue
-                middle_text = search_text[len(text_tree_results_current_node.textContent):-len(text_reverse_tree_results_current_node.textContent)] 
+                middle_text = search_text[len(text_tree_results_current_node.textContent):-len(text_reverse_tree_results_current_node.textContent)]
                 if not middle_text:
                     resulting_node_combos.append([text_tree_results_current_node, text_reverse_tree_results_current_node])
                 elif text_tree.isWord(middle_text):
@@ -216,7 +214,30 @@ class DomTree:
 
 
         return resulting_node_combos
-    
+
+
+    @classmethod
+    def find_by_text_in_order(cls, search_text: str, index_up_to = 0) -> list[list['DomTree']]:
+
+        print(f"{[node.textContent for node in text_tree_results] = }")
+
+        resulting_node_combos = []
+
+        text_tree_results: list[DomTree] = text_tree.getValueListOfBestMatches(search_text)
+
+        for node in text_tree_results:
+            node_document_index = DomTree.all_nodes_in_order.index(node)
+            if node_document_index <= index_up_to:
+                continue
+            if node.textContent == search_text:
+                resulting_node_combos.append()
+            resulting_node_combos.extend(DomTree.find_by_text_in_order())
+
+
+
+
+        return resulting_node_combos
+
     def recursive_parrents(self) -> list[tuple]:
         results = []
         node = self
@@ -241,7 +262,7 @@ class DomTree:
         for child_node in self.childrenNodes:
             yield child_node
 
-        
+
         for child_node in self.childrenNodes:
             child_node: DomTree
             for childs_child in child_node.breadth_first_search_child_generator():
@@ -251,11 +272,11 @@ class DomTree:
         """works like an enumerater"""
         for child_node in self.childrenNodes:
             child_node: DomTree
-            yield child_node        
+            yield child_node
             for childs_child in child_node.depth_first_search_child_generator():
                 yield childs_child
-    
-    
+
+
     def get_closest_sharing_parrent(*nodes: list['DomTree']) -> 'DomTree':
         """n*2 time and space complexity"""
 
@@ -286,7 +307,7 @@ class DomTree:
         closest_parrent_distance = float('inf')
         closest_parrent = None
         for parrent in sharing_parrents:
-            distance: int = all_parrents[parrent][1] 
+            distance: int = all_parrents[parrent][1]
             if distance < closest_parrent_distance:
                 closest_parrent = parrent
                 closest_parrent_distance = distance
@@ -310,13 +331,13 @@ class DomTree:
             if any(node.atributes.get(atr) != atributes[atr] for atr in atributes):
                 continue
             return node
-        
+
         for node in self.childrenNodes:
             node: DomTree
             result_in_child = node.search_for_element(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes)
             if result_in_child:
                 return result_in_child
-            
+
     def search_for_elements(self, tag_name=None, class_name=None, id=None, atributes={}) -> list['DomTree']:
         results = []
         for node in self.childrenNodes:
@@ -330,13 +351,13 @@ class DomTree:
             if any(node.atributes.get(atr) != atributes[atr] for atr in atributes):
                 continue
             results.append(node)
-        
+
         for node in self.childrenNodes:
             node: DomTree
             results.extend(node.search_for_elements(tag_name=tag_name, class_name=class_name, id=id, atributes=atributes))
 
         return results
-    
+
     def best_common_selector(self, *others: list['DomTree']) -> str:
         print(f"{others = }")
         assert all(isinstance(other, DomTree) for other in others)
@@ -351,8 +372,8 @@ class DomTree:
         closest_sharing_parrent: 'DomTree' = self.get_closest_sharing_parrent(self, *others)
         query = closest_sharing_parrent.create_query() + f".search_for_elements({tag_name = }, {classList = }, None, {atributes = })"
 
-        return query   
-    
+        return query
+
     def next_sibling(self):
         parrent: DomTree = self.parentNode
         if not parrent:
@@ -361,7 +382,7 @@ class DomTree:
         if len(parrent.childrenNodes) <= index_in_parrent +1:
             return None
         return parrent.childrenNodes[index_in_parrent+1]
-    
+
     def previous_sibling(self):
         parrent: DomTree = self.parentNode
         if not parrent:
@@ -382,7 +403,7 @@ class DomTree:
             if child == this_nodes_parrent:
                 continue
             if len(family_of_grand_children) > index:
-                yield family_of_grand_children[index] 
+                yield family_of_grand_children[index]
 
     def get_same_age_cousins(self):
         this_nodes_parrent: DomTree = self.parentNode

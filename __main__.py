@@ -3,10 +3,10 @@ from domTree import DomTree
 
 
 html_string = (
-    "<body class='fuck'>\n"
+    "<body class='hello'>\n"
     "    <nav class='fuck' id='fire' data='team' it='hello'>\n"
     "        <div>hello</div>\n"
-    "        <div class='fuck' it='hello'>fuck</div>\n"
+    "        <div class='fuck' it='hello'>hi</div>\n"
     "    </nav>\n"
        "    <nav class='side' id='figma'>\n"
             "fuck"
@@ -17,7 +17,7 @@ html_string = (
     "    </nav>\n"
 
     "</body>"
-) 
+)
 
 print(f"{html_string = }")
 
@@ -31,6 +31,9 @@ html = HTML.get_html_tag_list(html_string)
 print(html)
 
 document: DomTree = DomTree.create_document_from(html)
+
+
+DomTree.all_nodes_in_order = [child for child in document.breadth_first_search_child_generator()]
 
 print(document.atributes)
 
@@ -72,7 +75,6 @@ tested_selector = document.querySelector('body').search_for_elements(tag_name = 
 print(f"{tested_selector = }")
 
 
-print(document.find_best_text_match("hello"))
 
 
 # print(f"{[node for node in document.depth_first_search_child_generator()]}")
