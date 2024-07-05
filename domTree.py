@@ -191,9 +191,6 @@ class DomTree:
         text_tree_results: list[DomTree] = text_tree.getValueListOfBestMatches(search_text)
         text_reverse_tree_results: list[DomTree] = text_reverse_tree.getValueListOfBestMatches(search_text[::-1])
 
-        print(f"{[node.textContent for node in text_tree_results] = }")
-        print(f"{[node.textContent for node in text_reverse_tree_results] = }")
-
         resulting_node_combos = []
 
         for index_, text_tree_results_current_node in enumerate(text_tree_results):
@@ -218,8 +215,6 @@ class DomTree:
 
     @classmethod
     def find_by_text_in_order(cls, search_text: str, index_up_to = 0) -> list[list['DomTree']]:
-
-        print(f"{[node.textContent for node in text_tree_results] = }")
 
         resulting_node_combos = []
 
@@ -318,12 +313,10 @@ class DomTree:
 
 
     def search_for_element(self, tag_name=None, class_name=None, id=None, atributes = {}) -> 'DomTree':
-        print(f"{atributes = }")
         for node in self.childrenNodes:
             node: DomTree
             if node.tagname != tag_name:
                 continue
-            print(f"{node.atributes = }")
             if (class_name and class_name not in node.classList):
                 continue
             if (id and node.id != id):
@@ -359,7 +352,6 @@ class DomTree:
         return results
 
     def best_common_selector(self, *others: list['DomTree']) -> str:
-        print(f"{others = }")
         assert all(isinstance(other, DomTree) for other in others)
         atributes = list(filter(lambda item: all(item[0] in other.atributes for other in others) and all(item[1] == other.atributes[item[0]] for other in others), self.atributes.items()))
         classList = list(filter(lambda class_name: all(class_name in other.classList  for other in others), self.classList))
